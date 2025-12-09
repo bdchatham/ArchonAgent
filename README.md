@@ -13,10 +13,10 @@ Archon consists of two independent systems:
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│  Configuration (config.yaml)                                 │
-│  - GitHub repositories to monitor                            │
-│  - Model configurations (embeddings, LLM)                    │
-│  - Infrastructure parameters                                 │
+│  Configuration (config.yaml)                                │
+│  - GitHub repositories to monitor                           │
+│  - Model configurations (embeddings, LLM)                   │
+│  - Infrastructure parameters                                │
 └─────────────────────────────────────────────────────────────┘
                               │
                 ┌─────────────┴─────────────┐
