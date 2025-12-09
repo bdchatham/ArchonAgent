@@ -1,0 +1,1 @@
+# Query processing Lambda function
