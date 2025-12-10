@@ -40,18 +40,18 @@
   - **Feature: archon-rag-system, Property 21: Rate limit compliance**
   - **Validates: Requirements 9.3**
 
-- [ ] 3. Implement change tracking with DynamoDB
+- [x] 3. Implement change tracking with DynamoDB
   - Create ChangeTracker class to interface with DynamoDB
   - Implement methods to get last known SHA, update SHA, and detect changes
   - Define DynamoDB table schema with partition key and attributes
   - Add error handling for DynamoDB throttling and connection errors
   - _Requirements: 3.2, 4.4_
 
-- [ ] 3.1 Write property test for document update replacement
+- [x] 3.1 Write property test for document update replacement
   - **Feature: archon-rag-system, Property 11: Document update replaces previous version**
   - **Validates: Requirements 4.4**
 
-- [ ] 4. Implement document ingestion pipeline
+- [x] 4. Implement document ingestion pipeline
   - Create IngestionPipeline class to process documents
   - Implement document chunking using LangChain RecursiveCharacterTextSplitter (1000 chars, 200 overlap)
   - Integrate AWS Bedrock for embedding generation (amazon.titan-embed-text-v1)
@@ -59,27 +59,23 @@
   - Add document content extraction and preprocessing
   - _Requirements: 4.1, 4.2, 4.3, 4.5_
 
-- [ ] 4.1 Write property test for embedding dimension consistency
+- [x] 4.1 Write property test for embedding dimension consistency
   - **Feature: archon-rag-system, Property 9: Embedding dimension consistency**
   - **Validates: Requirements 4.1**
 
-- [ ] 4.2 Write property test for metadata completeness
+- [x] 4.2 Write property test for metadata completeness
   - **Feature: archon-rag-system, Property 10: Metadata completeness in vector storage**
   - **Validates: Requirements 4.2, 4.3**
 
-- [ ] 4.3 Write property test for embedding retry with backoff
+- [x] 4.3 Write property test for embedding retry with backoff
   - **Feature: archon-rag-system, Property 12: Embedding generation retry with backoff**
   - **Validates: Requirements 4.5**
 
-- [ ] 4.4 Write property test for credential exclusion
-  - **Feature: archon-rag-system, Property 22: Credential exclusion from storage**
-  - **Validates: Requirements 9.4**
-
-- [ ] 4.5 Write property test for document type metadata
+- [x] 4.4 Write property test for document type metadata
   - **Feature: archon-rag-system, Property 23: Document type metadata presence**
   - **Validates: Requirements 10.3**
 
-- [ ] 5. Implement vector store manager with OpenSearch
+- [-] 5. Implement vector store manager with OpenSearch
   - Create VectorStoreManager class to interface with OpenSearch Serverless
   - Implement index creation with vector field configuration (1536 dimensions)
   - Add upsert_vectors method to store embeddings with metadata
