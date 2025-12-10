@@ -117,7 +117,7 @@
   - **Feature: archon-rag-system, Property 20: Permission error handling**
   - **Validates: Requirements 9.2**
 
-- [ ] 7. Implement RAG chain with LangChain
+- [x] 7. Implement RAG chain with LangChain
   - Create ArchonRAGChain class using LangChain RetrievalQA
   - Integrate AWS Bedrock LLM (anthropic.claude-3-haiku-20240307)
   - Define prompt template for Archon system engineering expert persona
@@ -126,15 +126,15 @@
   - Configure LangChain to return source documents with responses
   - _Requirements: 6.1, 6.2, 6.3, 6.4, 7.1, 7.2, 7.3, 7.4, 7.5_
 
-- [ ] 7.1 Write property test for query embedding generation
+- [x] 7.1 Write property test for query embedding generation
   - **Feature: archon-rag-system, Property 15: Query embedding generation**
   - **Validates: Requirements 6.1**
 
-- [ ] 7.2 Write property test for context inclusion in LLM prompt
+- [x] 7.2 Write property test for context inclusion in LLM prompt
   - **Feature: archon-rag-system, Property 17: Context inclusion in LLM prompt**
   - **Validates: Requirements 6.3**
 
-- [ ] 8. Implement query handler Lambda function
+- [x] 8. Implement query handler Lambda function
   - Create QueryHandler class to process API requests
   - Implement query validation (non-empty, reasonable length)
   - Add handle_query method to orchestrate RAG pipeline
@@ -143,27 +143,27 @@
   - Add error handling for invalid queries and processing failures
   - _Requirements: 5.1, 5.2, 5.3, 5.4, 6.5_
 
-- [ ] 8.1 Write property test for query input validation
+- [x] 8.1 Write property test for query input validation
   - **Feature: archon-rag-system, Property 13: Query input validation**
   - **Validates: Requirements 5.2**
 
-- [ ] 8.2 Write property test for invalid query error responses
+- [x] 8.2 Write property test for invalid query error responses
   - **Feature: archon-rag-system, Property 14: Invalid query error responses**
   - **Validates: Requirements 5.4**
 
-- [ ] 8.3 Write property test for source reference completeness
+- [x] 8.3 Write property test for source reference completeness
   - **Feature: archon-rag-system, Property 18: Source reference completeness**
   - **Validates: Requirements 6.5**
 
-- [ ] 9. Define data models and schemas
+- [x] 9. Define data models and schemas
   - Create Document, DocumentChunk, RepositoryConfig dataclasses
   - Create QueryResponse, SourceReference, MonitoringResult dataclasses
   - Add validation methods and serialization logic
   - Implement proper type hints throughout
   - _Requirements: 4.2, 4.3, 6.5_
 
-- [ ] 10. Implement shared resources CDK stack (TypeScript)
-  - Create ArchonSharedResources stack class following AWS Well-Architected Framework
+- [-] 10. Implement shared resources CDK stack (TypeScript)
+  - Create ArchonAgent stack class following AWS Well-Architected Framework
   - Define OpenSearch Serverless collection with vector search configuration
   - Configure index with 1536-dimension vector field
   - Set up least-privilege IAM policies for Lambda access to OpenSearch
