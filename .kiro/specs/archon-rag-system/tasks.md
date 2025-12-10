@@ -161,19 +161,20 @@
   - Add validation methods and serialization logic
   - Implement proper type hints throughout
   - _Requirements: 4.2, 4.3, 6.5_
-
-- [-] 10. Implement shared resources CDK stack (TypeScript)
-  - Create ArchonAgent stack class following AWS Well-Architected Framework
+Ca 
+- [x] 10. Implement Archon infrastructure CDK stack (TypeScript)
+  - Create ArchonInfrastructureStack class following AWS Well-Architected Framework
   - Define OpenSearch Serverless collection with vector search configuration
   - Configure index with 1536-dimension vector field
   - Set up least-privilege IAM policies for Lambda access to OpenSearch
   - Enable encryption at rest for OpenSearch
   - Add CloudFormation outputs for resource ARNs
   - Apply resource tags (Environment, Project, Owner)
+  - Note: Infrastructure is scoped specifically to Archon (not shared/generic) to enable rapid development
   - _Requirements: 2.1, 2.2, 4.2_
 
-- [ ] 11. Implement cron job CDK stack (TypeScript)
-  - Create ArchonCronStack class following AWS Well-Architected Framework
+- [x] 11. Implement Archon knowledge base CDK stack (TypeScript)
+  - Create ArchonKnowledgeBaseStack class following AWS Well-Architected Framework
   - Define EventBridge scheduled rule with configurable cron expression
   - Create Lambda function resource for document monitor with proper memory/timeout settings
   - Define DynamoDB table for change tracking with encryption enabled
@@ -181,9 +182,10 @@
   - Set up CloudWatch log groups with retention policies and alarms for errors
   - Add environment variables for configuration
   - Apply resource tags (Environment, Project, Owner)
+  - Reference ArchonInfrastructureStack for OpenSearch resources
   - _Requirements: 2.1, 2.2, 3.1, 3.2_
 
-- [ ] 12. Implement agent CDK stack (TypeScript)
+- [x] 12. Implement Archon agent CDK stack (TypeScript)
   - Create ArchonAgentStack class following AWS Well-Architected Framework
   - Define API Gateway REST API with /query endpoint and throttling limits
   - Create Lambda function resource for query handler with proper memory/timeout settings
@@ -193,9 +195,10 @@
   - Add CORS configuration for API Gateway
   - Add environment variables for configuration
   - Apply resource tags (Environment, Project, Owner)
+  - Reference ArchonInfrastructureStack for OpenSearch resources
   - _Requirements: 2.1, 2.3, 5.1_
 
-- [ ] 13. Implement CDK configuration loader (TypeScript)
+- [x] 13. Implement CDK configuration loader (TypeScript)
   - Create ConfigLoader utility class for CDK
   - Implement YAML parsing for infrastructure configuration
   - Add validation for required fields and valid values
@@ -203,7 +206,7 @@
   - Add error handling for missing or invalid configuration
   - _Requirements: 1.1, 1.3, 8.1, 8.3_
 
-- [ ] 14. Create CDK app entry point (TypeScript)
+- [x] 14. Create CDK app entry point (TypeScript)
   - Create bin/archon.ts with CDK app initialization
   - Load configuration using ConfigLoader
   - Instantiate all three stacks (Shared, Cron, Agent)
@@ -211,7 +214,7 @@
   - Add stack tags for resource organization (Environment, Project, Owner, CostCenter)
   - _Requirements: 2.1, 2.4, 8.3_
 
-- [ ] 15. Set up Lambda deployment packages
+- [x] 15. Set up Lambda deployment packages
   - Create requirements.txt for Python dependencies (langchain, boto3, hypothesis, etc.)
   - Configure Lambda layers for shared dependencies
   - Set up proper directory structure for Lambda code
@@ -219,7 +222,7 @@
   - Configure CDK to bundle Lambda code correctly
   - _Requirements: 2.2, 2.3_
 
-- [ ] 16. Implement logging and monitoring
+- [x] 16. Implement logging and monitoring
   - Add structured logging throughout all components
   - Implement CloudWatch custom metrics for key operations
   - Add X-Ray tracing instrumentation
@@ -227,7 +230,7 @@
   - Configure alarms for errors and performance issues
   - _Requirements: 3.4, 5.3_
 
-- [ ] 17. Create deployment scripts and documentation
+- [x] 17. Create deployment scripts and documentation
   - Write deployment script (deploy.sh) for CDK deployment
   - Create README.md with setup and deployment instructions
   - Document configuration file format and options
@@ -235,5 +238,5 @@
   - Create architecture diagrams and documentation
   - _Requirements: 8.1, 8.4_
 
-- [ ] 18. Checkpoint - Ensure all tests pass
+- [x] 18. Checkpoint - Ensure all tests pass
   - Ensure all tests pass, ask the user if questions arise.

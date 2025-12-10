@@ -29,16 +29,16 @@ graph TB
         MonitorLambda --> CronLogs
     end
 
-    subgraph AgentStack["Agent Stack (CDK)"]
+    subgraph QueryStack["Query API Stack (CDK)"]
         APIGateway["API Gateway<br/>(REST)"]
         QueryLambda["Lambda: Query Handler<br/>- LangChain RAG chain<br/>- Bedrock integration<br/>- Response formatting"]
-        AgentLogs["CloudWatch Logs"]
+        QueryLogs["CloudWatch Logs"]
         
         APIGateway --> QueryLambda
-        QueryLambda --> AgentLogs
+        QueryLambda --> QueryLogs
     end
 
-    subgraph Shared["Shared Resources"]
+    subgraph InfraStack["Infrastructure Stack (CDK)"]
         OpenSearch["OpenSearch Serverless<br/>(Vector Database)"]
         Bedrock["AWS Bedrock<br/>- Embeddings Model<br/>- LLM (Claude Haiku)"]
     end
@@ -48,7 +48,8 @@ graph TB
     end
 
     ConfigFile -.-> CronStack
-    ConfigFile -.-> AgentStack
+    ConfigFile -.-> QueryStack
+    ConfigFile -.-> InfraStack
     
     MonitorLambda --> GitHub
     MonitorLambda --> OpenSearch
@@ -61,12 +62,20 @@ graph TB
 
     style Config fill:#e1f5ff
     style CronStack fill:#fff4e1
-    style AgentStack fill:#e8f5e9
-    style Shared fill:#f3e5f5
+    style QueryStack fill:#e8f5e9
+    style InfraStack fill:#f3e5f5
     style External fill:#fce4ec
 ```
 
 ### Stack Separation
+
+**Note:** This infrastructure is scoped specifically to Archon. Future agents may motivate refactoring into a more general library, but for now all resources are Archon-specific to enable rapid development and deployment.
+
+**Infrastructure Stack:**
+- OpenSearch Serverless collection (vector database)
+- IAM policies for Lambda access to OpenSearch
+- Encryption and network policies
+- CloudFormation outputs for cross-stack references
 
 **Cron Job Stack:**
 - EventBridge scheduled rule
@@ -75,16 +84,15 @@ graph TB
 - IAM roles and policies
 - CloudWatch log groups
 
-**Agent Stack:**
+**Query API Stack:**
 - API Gateway REST API
 - Lambda function for query processing
 - IAM roles and policies
 - CloudWatch log groups
 
-**Shared Resources:**
-- OpenSearch Serverless collection (vector database)
-- AWS Bedrock access (managed service)
-- VPC and networking (if required)
+**AWS Bedrock:**
+- Managed service (no stack required)
+- Accessed via IAM permissions
 
 ### Document Ingestion Flow
 
@@ -403,6 +411,8 @@ Answer:
 
 **Purpose:** Define and deploy AWS infrastructure using TypeScript CDK following AWS Well-Architected Framework best practices
 
+**Scope:** All infrastructure is scoped specifically to Archon. This is intentional to enable rapid development and deployment. Future agents may motivate refactoring into a more general library, but for now we prioritize getting Archon working with CI/CD and a demo.
+
 **AWS Best Practices:**
 - Use least-privilege IAM policies with specific resource ARNs
 - Enable CloudWatch logging and monitoring for all resources
@@ -420,34 +430,37 @@ export class ConfigLoader {
   static loadConfig(configPath: string): ArchonConfig
 }
 
-// lib/cron-stack.ts
+// lib/archon-infrastructure-stack.ts
+export class ArchonInfrastructureStack extends Stack {
+  constructor(scope: Construct, id: string, config: ArchonConfig)
+  // Creates: OpenSearch Serverless collection
+  // Applies: Encryption, access policies, resource tags
+}
+
+// lib/archon-cron-stack.ts
 export class ArchonCronStack extends Stack {
   constructor(scope: Construct, id: string, config: ArchonConfig)
   // Creates: EventBridge, Lambda, DynamoDB, IAM
   // Applies: Resource tags, CloudWatch alarms, least-privilege IAM
 }
 
-// lib/agent-stack.ts
-export class ArchonAgentStack extends Stack {
+// lib/archon-query-stack.ts
+export class ArchonQueryStack extends Stack {
   constructor(scope: Construct, id: string, config: ArchonConfig)
   // Creates: API Gateway, Lambda, IAM
   // Applies: Resource tags, CloudWatch alarms, API throttling
-}
-
-// lib/shared-resources.ts
-export class ArchonSharedResources extends Stack {
-  constructor(scope: Construct, id: string, config: ArchonConfig)
-  // Creates: OpenSearch Serverless collection
-  // Applies: Encryption, access policies, resource tags
 }
 
 // bin/archon.ts
 const app = new App();
 const config = ConfigLoader.loadConfig('./config/config.yaml');
 
-new ArchonSharedResources(app, 'ArchonShared', config);
-new ArchonCronStack(app, 'ArchonCron', config);
-new ArchonAgentStack(app, 'ArchonAgent', config);
+const infraStack = new ArchonInfrastructureStack(app, 'ArchonInfrastructure', config);
+const cronStack = new ArchonCronStack(app, 'ArchonCron', config);
+const queryStack = new ArchonQueryStack(app, 'ArchonQuery', config);
+
+cronStack.addDependency(infraStack);
+queryStack.addDependency(infraStack);
 ```
 
 ## Data Models

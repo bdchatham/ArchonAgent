@@ -169,30 +169,73 @@ models:
 
 ## Deployment
 
+### Automated Deployment (Recommended)
+
+Archon uses **Argo Workflows** for CI/CD pipeline automation. The pipeline handles:
+- Building Lambda layers
+- Running property-based tests
+- CDK synthesis and validation
+- Multi-environment deployment (dev → staging → prod)
+- Rollback capabilities
+- Integration with monitoring
+
+See the Argo Workflows pipeline specification for details (coming soon).
+
+### Manual Deployment (Local Development)
+
+For local development and testing:
+
 1. **Create your configuration file**
    ```bash
    cp config/config.example.yaml config/config.yaml
    # Edit config.yaml with your repository sources
    ```
 
-2. **Synthesize CloudFormation templates**
+2. **Build Lambda layer** (first time or when dependencies change)
+   ```bash
+   ./scripts/build-lambda-layer.sh
+   ```
+
+3. **Synthesize CloudFormation templates**
    ```bash
    cdk synth
    ```
 
-3. **Deploy all stacks**
+4. **Deploy all stacks**
    ```bash
    cdk deploy --all
    ```
 
    Or deploy stacks individually:
    ```bash
-   cdk deploy ArchonShared
-   cdk deploy ArchonCron
-   cdk deploy ArchonAgent
+   cdk deploy ArchonInfrastructure-dev
+   cdk deploy ArchonKnowledgeBase-dev
+   cdk deploy ArchonAgent-dev
    ```
 
-4. **Note the API Gateway endpoint** from the deployment output
+5. **Deploy to specific environment**
+   ```bash
+   cdk deploy --all --context environment=staging
+   ```
+
+6. **Note the API Gateway endpoint** from the deployment output
+
+### Deployment Verification
+
+After deployment, verify the system is working:
+
+```bash
+# Check Lambda functions are deployed
+aws lambda list-functions --query 'Functions[?starts_with(FunctionName, `archon-`)].FunctionName'
+
+# Check API Gateway endpoint
+aws apigateway get-rest-apis --query 'items[?name==`archon-api-dev`].{id:id,name:name}'
+
+# Test the query endpoint
+curl -X POST https://<api-id>.execute-api.<region>.amazonaws.com/dev/v1/chat/completions \
+  -H "Content-Type: application/json" \
+  -d '{"messages": [{"role": "user", "content": "What is Archon?"}]}'
+```
 
 ## Usage
 

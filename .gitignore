@@ -75,6 +75,7 @@ coverage.xml
 # Lambda deployment packages
 *.zip
 lambda-packages/
+lambda-layer/
 
 # Terraform (if used alongside CDK)
 *.tfstate
