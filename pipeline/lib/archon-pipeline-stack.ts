@@ -1,6 +1,6 @@
 import * as cdk from 'aws-cdk-lib';
 import { Construct } from 'constructs';
-import { AphexPipelineStack } from './aphex-pipeline-stub';
+import { AphexPipelineStack } from '@bdchatham/aphex-pipeline';
 
 export interface ArchonPipelineStackProps extends cdk.StackProps {
   /**
@@ -102,11 +102,12 @@ export class ArchonPipelineStack extends cdk.Stack {
       sensorName: sensorName,
       artifactBucketName: artifactBucketName,
       artifactRetentionDays: artifactRetentionDays,
+      configPath: '../aphex-config.yaml',
     });
 
     // Define stack outputs for webhook URL
     this.webhookUrl = new cdk.CfnOutput(this, 'WebhookUrl', {
-      value: pipeline.webhookUrl,
+      value: pipeline.argoEventsWebhookUrl,
       description: 'GitHub webhook URL for triggering pipeline executions',
       exportName: `${this.stackName}-WebhookUrl`,
     });
