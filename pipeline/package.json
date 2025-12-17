@@ -20,7 +20,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@bdchatham/aphex-pipeline": "^1.7.0",
+    "@bdchatham/aphex-pipeline": "^1.8.0",
     "@kubernetes/client-node": "^0.20.0",
     "aws-cdk-lib": "^2.117.0",
     "constructs": "^10.0.0",
