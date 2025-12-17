@@ -9,7 +9,7 @@ build:
 environments:
   - name: dev
     region: us-east-1
-    account: "123456789012"
+    account: "371601828463"
     stacks:
       # Stacks deploy in order listed - dependencies first
       - name: ArchonInfrastructureStack

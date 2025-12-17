@@ -1,6 +1,7 @@
 import * as cdk from 'aws-cdk-lib';
 import { Construct } from 'constructs';
 import { AphexPipelineStack } from '@bdchatham/aphex-pipeline';
+import { execSync } from 'child_process';
 
 export interface ArchonPipelineStackProps extends cdk.StackProps {
   /**
@@ -90,9 +91,39 @@ export class ArchonPipelineStack extends cdk.Stack {
     const artifactBucketName = props.artifactBucketName ?? 'archon-agent-artifacts';
     const artifactRetentionDays = props.artifactRetentionDays ?? 30;
 
+    // Dynamically fetch the pipeline creator role ARN from CloudFormation exports
+    // This is done at synthesis time because the construct validates ARN format
+    let pipelineCreatorRoleArn: string;
+    try {
+      const result = execSync(
+        `aws cloudformation list-exports --query 'Exports[?Name==\`ArbiterCluster-PipelineCreatorRoleArn\`].Value' --output text`,
+        { encoding: 'utf-8' }
+      ).trim();
+      
+      if (result && result !== '') {
+        pipelineCreatorRoleArn = result;
+        console.log(`Using PipelineCreatorRole: ${pipelineCreatorRoleArn}`);
+      } else {
+        // Fallback to constructed ARN if export not found
+        pipelineCreatorRoleArn = `arn:aws:iam::${this.account}:role/arbiter-pipeline-creator`;
+        console.warn(`PipelineCreatorRole export not found, using fallback: ${pipelineCreatorRoleArn}`);
+      }
+    } catch (error) {
+      // Fallback if AWS CLI call fails
+      pipelineCreatorRoleArn = `arn:aws:iam::${this.account}:role/arbiter-pipeline-creator`;
+      console.warn(`Failed to fetch PipelineCreatorRole ARN, using fallback: ${pipelineCreatorRoleArn}`);
+    }
+
     // Instantiate AphexPipelineStack construct with configuration
+    // Use clusterExportPrefix to work with ArbiterCluster exports
+    // Use pipelineCreatorRoleArn to safely access cluster resources
+    // Both Argo Workflows and Argo Events are installed in the 'argo' namespace
     const pipeline = new AphexPipelineStack(this, 'AphexPipeline', {
       clusterName: props.clusterName,
+      clusterExportPrefix: 'ArbiterCluster-',
+      pipelineCreatorRoleArn: pipelineCreatorRoleArn,
+      argoNamespace: 'argo',
+      argoEventsNamespace: 'argo',
       githubOwner: props.githubOwner,
       githubRepo: props.githubRepo,
       githubBranch: githubBranch,
