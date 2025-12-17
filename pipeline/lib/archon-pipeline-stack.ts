@@ -134,6 +134,9 @@ export class ArchonPipelineStack extends cdk.Stack {
       artifactBucketName: artifactBucketName,
       artifactRetentionDays: artifactRetentionDays,
       configPath: '../aphex-config.yaml',
+      // Container image configuration for convention-based ECR references
+      containerImageAccount: this.account,
+      containerImageRegion: this.region,
     });
 
     // Define stack outputs for webhook URL
