@@ -2,7 +2,7 @@ version: "1.0"
 
 build:
   commands:
-    - npm ci
+    - NODE_ENV=development npm ci
     - npm run build
     - npm test
 
